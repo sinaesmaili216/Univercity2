@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.core.exceptions import ValidationError
+
 from .models import User
 from .models import Lesson, Student, Master
 
@@ -8,9 +10,17 @@ class CreateStudent(forms.ModelForm):
     email = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     password = forms.CharField(widget=forms.PasswordInput())
 
+    def clean(self):
+        cleaned_data = super().clean()
+        nation_code = cleaned_data.get('nation_code')
+
+        if len(str(nation_code)) < 10 or len(str(nation_code)) > 10:
+            raise ValidationError('nation code should be 10 number')
+        return cleaned_data
+
     class Meta:
         model = Student
-        exclude = ['user']
+        exclude = ['user', 'lessons']
 
 
 class SelectLesson(forms.ModelForm):
@@ -33,7 +43,7 @@ class EditLessonsByMaster(forms.ModelForm):
 
 
 class RegisterMaster(forms.ModelForm):
-    username = forms.CharField(max_length=50)
+    email = forms.CharField(max_length=50)
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:

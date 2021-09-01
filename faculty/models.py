@@ -63,6 +63,7 @@ class User(AbstractBaseUser):
     def is_staff(self):
         return self.is_admin
 
+
 class Master(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     first_name = models.CharField(max_length=30)

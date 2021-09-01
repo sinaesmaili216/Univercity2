@@ -46,7 +46,7 @@
     {% for class in classes %}
        <table>
         <tr>
-            <td><a href="{% url 'faculty:student_and_lesson' class.name %}"><h1>{{ class.name }}</h1></a></td>
+            <td><a href="{% url 'faculty:class_info' class.name %}"><h1>{{ class.name }}</h1></a></td>
             <td>{{ class.capacity }}</td>
         </tr>
        </table>

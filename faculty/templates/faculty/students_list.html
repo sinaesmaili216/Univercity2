@@ -2,11 +2,44 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Students List</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous"></head>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+
+     <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+        }
+
+        td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+          text-align: center;
+            width: 33%;
+        }
+
+    </style>
 </head>
 <body>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Nation Code</th>
+        </tr>
+    </table>
+
     {% for student in students %}
-        <a href="{% url 'faculty:edit_student_lessons_by_master' student.first_name %}"><h3>{{ student }}</h3></a>
+        <table>
+            <tr>
+                <td><a href="{% url 'faculty:edit_student_lessons_by_master' student.first_name %}"><h3>{{ student }}</h3></a></td>
+                <td><h3>{{ student.nation_code }}</h3></td>
+            </tr>
+        </table>
+
     {% endfor %}
 </body>
 </html>

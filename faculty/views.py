@@ -1,17 +1,13 @@
-#from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from faculty.models import Class, Student, Lesson, Master, User
 from .forms import CreateStudent, SelectLesson, LoginForm, EditLessonsByMaster, RegisterMaster
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 
 
 def index(request):
-    #if request.user.is_authenticated:
     return render(request, 'faculty/index.html')
-    #else:
-    #    return redirect('faculty:login')
 
 
 def login_user(request):
@@ -32,6 +28,11 @@ def login_user(request):
         form = LoginForm()
 
     return render(request, 'faculty/login.html', context={'form': form})
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('faculty:login')
 
 
 def show_class_list(request):
@@ -55,12 +56,12 @@ def search_in_class_list(request):
             'students': students
         }
     else:
-        return redirect('faculty:class_list')
+        return HttpResponseRedirect('faculty:class_list')
 
-    return render(request, 'faculty/student_and_lesson.html', context)
+    return render(request, 'faculty/class_info.html', context)
 
 
-def show_students_and_lessons(request, name):
+def class_info(request, name):
     class_name = Class.objects.get(name=name)
     lessons = class_name.lessons.all
     students = class_name.students.all
@@ -68,7 +69,7 @@ def show_students_and_lessons(request, name):
         'lessons': lessons,
         'students': students
     }
-    return render(request, 'faculty/student_and_lesson.html', context)
+    return render(request, 'faculty/class_info.html', context)
 
 
 def create_student(request):
@@ -92,7 +93,8 @@ def create_student(request):
                 faculty = form.cleaned_data.get('faculty')
 
                 new_student = Student.objects.create(first_name=first_name, last_name=last_name, nation_code=nation_code, age=age, user=create_new_user, faculty=faculty)
-                return HttpResponse('student created successfully')
+                login(request, create_new_user)
+                return redirect('faculty:index')
     else:
         form = CreateStudent()
 
@@ -147,17 +149,18 @@ def register_master(request):
         if form.is_valid():
             first_name = form.cleaned_data.get('first_name')
             last_name = form.cleaned_data.get('last_name')
-            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
 
-            new_user = User.objects.create_user(username=username, password=password)
-            new_user.is_staff = True
+            new_user = User.objects.create_user(email=email, password=password)
+            new_user.is_teacher = True
             new_user.save()
 
             create_new_master = Master.objects.create(user=new_user, first_name=first_name, last_name=last_name)
-            #create_new_master.save()
+            create_new_master.save()
 
-            return HttpResponse('new master created successfully')
+            login(request, new_user)
+            return redirect('faculty:index')
     else:
         form = RegisterMaster()
 

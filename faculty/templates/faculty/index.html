@@ -11,12 +11,15 @@
 {% if user.is_authenticated and user.is_student %}
     <a class="btn btn-secondary" href="{% url 'faculty:class_list' %}"><h1>Class List</h1></a>
     <a class="btn btn-secondary" href="{% url 'faculty:select_lesson' %}"><h1>Select Lesson</h1></a>
+    <a class="btn btn-secondary" href="{% url 'faculty:logout' %}"><h1>Logout</h1></a>
     {% elif user.is_authenticated and user.is_teacher%}
     <a class="btn btn-secondary" href="{% url 'faculty:class_list' %}"><h1>Class List</h1></a>
     <a class="btn btn-secondary" href="{% url 'faculty:students_ist' %}"><h1>Students</h1></a>
+    <a class="btn btn-secondary" href="{% url 'faculty:logout' %}"><h1>Logout</h1></a>
     {% else %}
     <a class="btn btn-secondary" href="{% url 'faculty:login' %}"><h1>Login</h1></a>
-    <a class="btn btn-secondary" href="{% url 'faculty:create_student' %}"><h1>Register</h1></a>
+    <a class="btn btn-secondary" href="{% url 'faculty:create_student' %}"><h1>Register as student</h1></a>
+    <a class="btn btn-secondary" href="{% url 'faculty:register_master' %}"><h1>Register as teacher</h1></a>
 {% endif %}
 </body>
 </html>
